@@ -1,6 +1,7 @@
 use std::ffi::CString;
 use std::os::raw::{c_char};
-use crate::{FileInfo, FileList};
+use crate::FileSystem::FileInfo::{FileInfo, FileInfoRaw, FileList};
+use crate::utils::cstrUtils;
 
 extern "C" {
   fn Copy(source: *const c_char, destination: *const c_char) -> bool;
@@ -56,8 +57,10 @@ pub fn get_files(path: &str) -> Vec<FileInfo> {
     if file_list.files.is_null() || file_list.count == 0 {
       return vec![];
     }
+
     let files_slice = std::slice::from_raw_parts(file_list.files, file_list.count as usize);
-    files_slice.to_vec()
+    
+    files_slice.iter().map(|raw| FileInfo::from(raw)).collect()
   }
 }
 
@@ -69,7 +72,21 @@ pub fn search_files(path: &str, query: &str) -> Vec<FileInfo> {
     if file_list.files.is_null() || file_list.count == 0 {
       return vec![];
     }
+
     let files_slice = std::slice::from_raw_parts(file_list.files, file_list.count as usize);
-    files_slice.to_vec()
+    
+    files_slice.iter().map(|raw| FileInfo::from(raw)).collect()
+  }
+}
+
+impl From<&FileInfoRaw> for FileInfo {
+  fn from(raw: &FileInfoRaw) -> Self {
+    Self {
+      name: cstrUtils::to_string_from_ptr(raw.name),
+      file_type: cstrUtils::to_string_from_ptr(raw.file_type),
+      path: cstrUtils::to_string_from_ptr(raw.path),
+      size: raw.size,
+      is_directory: raw.is_directory,
+    }
   }
 }

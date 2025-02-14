@@ -5,7 +5,7 @@ use std::sync::Mutex;
 use lazy_static::lazy_static;
 
 extern "C" {
-  fn StartFileMonitor(directory: *const c_char, callback: extern "C" fn(*const c_char, *const c_char));
+  fn StartFileMonitor(directory: *const c_char, callback: Option<unsafe extern "C" fn(*const c_char, *const c_char)>);
   fn StopFileMonitor();
 }
 
@@ -32,7 +32,7 @@ where
   *cb = Some(Box::new(callback));
 
   unsafe {
-    StartFileMonitor(c_directory.as_ptr(), file_event_callback);
+    StartFileMonitor(c_directory.as_ptr(), Some(file_event_callback));
   }
 }
 

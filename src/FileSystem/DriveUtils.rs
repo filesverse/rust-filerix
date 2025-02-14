@@ -1,5 +1,6 @@
 use std::ffi::{CStr, CString};
 use std::os::raw::{c_char, c_ulonglong};
+use crate::utils::cstrUtils;
 
 #[repr(C)]
 #[derive(Clone, Copy)]
@@ -9,8 +10,32 @@ pub struct DriveUsage {
 }
 
 #[repr(C)]
-#[derive(Clone, Copy)]
+#[derive(Clone)]
 pub struct DriveInfo {
+  pub device: String,
+  pub status: String,
+  pub mount_point: String,
+  pub partition: String,
+  pub fs_type: String,
+  pub unmountable: bool,
+}
+
+impl From<&RawDriveInfo> for DriveInfo {
+  fn from(raw: &RawDriveInfo) -> Self {
+    Self {
+      device: cstrUtils::to_string(&raw.device),
+      status: cstrUtils::to_string(&raw.status),
+      mount_point: cstrUtils::to_string(&raw.mount_point),
+      partition: cstrUtils::to_string(&raw.partition),
+      fs_type: cstrUtils::to_string(&raw.fs_type),
+      unmountable: raw.unmountable,
+    }
+  }
+}
+
+#[repr(C)]
+#[derive(Clone, Copy)]
+pub struct RawDriveInfo {
   pub device: [c_char; 256],
   pub status: [c_char; 256],
   pub mount_point: [c_char; 256],
@@ -21,7 +46,7 @@ pub struct DriveInfo {
 
 #[repr(C)]
 pub struct DriveList {
-  items: *mut DriveInfo,
+  items: *mut RawDriveInfo,
   count: usize,
 }
 
@@ -64,10 +89,10 @@ pub fn get_drives() -> Vec<DriveInfo> {
   unsafe {
     let drive_list = GetDrives();
     if drive_list.items.is_null() || drive_list.count == 0 {
-        return vec![];
+      return vec![];
     }
 
     let drives_slice = std::slice::from_raw_parts(drive_list.items, drive_list.count as usize);
-    drives_slice.to_vec()
+    drives_slice.iter().map(DriveInfo::from).collect()
   }
 }

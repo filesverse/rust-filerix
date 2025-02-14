@@ -356,6 +356,9 @@ extern "C" {
     pub fn GetDriveUsage(drive: *const ::std::os::raw::c_char) -> DriveUsage;
 }
 extern "C" {
+    pub fn GetMountPoint(device: *const ::std::os::raw::c_char) -> *const ::std::os::raw::c_char;
+}
+extern "C" {
     pub fn MountDrive(device: *const ::std::os::raw::c_char) -> bool;
 }
 extern "C" {
