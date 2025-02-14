@@ -1,0 +1,14 @@
+[package]
+name = "filerix"
+version = "0.1.0"
+edition = "2021"
+description = "Rust bindings for filerix"
+license = "MIT"
+repository = "https://github.com/filesverse/filerix"
+
+[dependencies]
+libc = "0.2"
+lazy_static = "1.4"
+
+[build-dependencies]
+pkg-config = "0.3"
