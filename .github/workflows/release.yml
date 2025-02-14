@@ -13,6 +13,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install dependencies
+        run: sudo apt update && sudo apt install -y meson ninja-build
+
+      - name: Clone and build Filerix
+        run: |
+          git clone https://github.com/filesverse/filerix.git
+          cd filerix
+          meson setup build
+          ninja -C build
+          sudo ninja -C build install
+          cd .. && rm filerix -rf
+
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
 
