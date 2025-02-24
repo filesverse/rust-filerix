@@ -16,11 +16,8 @@ jobs:
       - name: Install dependencies
         run: sudo apt update && sudo apt install -y meson ninja-build libudev-dev
 
-      - name: Clone and build Filerix
-        run: |
-          bash <(curl -fsSL https://raw.githubusercontent.com/filesverse/filerix/refs/heads/main/scripts/install.sh)
-          ls
-          cd work/
+      - name: install filerix
+        run: bash <(curl -fsSL https://raw.githubusercontent.com/filesverse/filerix/refs/heads/main/scripts/install.sh)
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
