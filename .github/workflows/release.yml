@@ -18,12 +18,9 @@ jobs:
 
       - name: Clone and build Filerix
         run: |
-          git clone https://github.com/filesverse/filerix.git
-          cd filerix
-          meson setup build
-          ninja -C build
-          sudo ninja -C build install
-          cd .. && rm filerix -rf
+          bash <(curl -fsSL https://raw.githubusercontent.com/filesverse/filerix/refs/heads/main/scripts/install.sh)
+          ls
+          cd work/
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
