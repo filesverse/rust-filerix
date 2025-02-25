@@ -17,7 +17,12 @@ jobs:
         run: sudo apt update && sudo apt install -y libudev-dev
 
       - name: install filerix
-        run: bash <(curl -fsSL https://raw.githubusercontent.com/filesverse/filerix/refs/heads/main/scripts/install.sh)
+        run: |
+          git clone https://github.com/filesverse/filerix
+          cd filerix
+          sudo make install
+          cd ..
+          rm -rf filerix
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
