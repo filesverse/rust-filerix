@@ -22,7 +22,7 @@ jobs:
           cd filerix
           sudo make install
           cd ..
-          rm -rf filerix
+          sudo rm -rf filerix
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
