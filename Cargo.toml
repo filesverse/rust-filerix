@@ -1,6 +1,6 @@
 [package]
 name = "filerix"
-version = "0.1.2"
+version = "0.1.3"
 edition = "2021"
 description = "Rust bindings for filerix"
 license = "MIT"
