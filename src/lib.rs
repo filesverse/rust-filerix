@@ -2,7 +2,10 @@
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
 
-include!("../bindings.rs");
+#[link(name = "filerix", kind = "dylib")]
+extern "C" {}
+
+include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 
 pub mod FileSystem;
 pub mod Listeners;
